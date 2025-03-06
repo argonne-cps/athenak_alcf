@@ -1,0 +1,7 @@
+Legend: This is a fork off the AthenaK  master branch with modifications that are relevant to ALCF Platforms
+^^^^^^
+
+Installation: In order to build AthenaK on Aurora use one of the following Makefiles:
+^^^^^^^^^^^^
+- BuildMeWithOneAPI_Turb
+- BuildMeWithOneAPI_GRTorus
