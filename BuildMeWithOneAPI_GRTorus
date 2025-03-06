@@ -1,0 +1,43 @@
+#!/bin/bash
+set -e -a
+
+#... load the necessary modules here ...
+module load cmake
+#...
+
+path_to_code=`pwd`
+
+#.. ===
+#.. This build is for a specific problem "gr_torus"
+#.. ===
+build_date=$(date '+%Y-%m-%d')
+build_dir=${path_to_code}/MyTestBuild.GRTorus.$build_date
+
+cmake -B ${build_dir} \
+ -DCMAKE_BUILD_TYPE=RelWithDebInfo\
+ -DBUILD_TESTING=ON \
+ -DCMAKE_CXX_COMPILER=mpicxx \
+ -DAthena_ENABLE_MPI=ON \
+ -DMPI_CXX_COMPILER=mpicxx \
+ -DCMAKE_INSTALL_PREFIX=${build_dir} \
+ -DKokkos_ARCH_INTEL_PVC=ON \
+ -DKokkos_ARCH_SPR=ON \
+ -DKokkos_ENABLE_AGGRESSIVE_VECTORIZATION=ON \
+ -DKokkos_ENABLE_COMPLEX_ALIGN=ON \
+ -DKokkos_ENABLE_LIBDL=ON \
+ -DKokkos_ENABLE_MPI=ON \
+ -DKokkos_ENABLE_SERIAL=ON \
+ -DKokkos_ENABLE_SYCL=ON \
+ -DPROBLEM=gr_torus
+
+cd ${build_dir}
+
+gmake -j16 -l16 all
+
+#.. ===
+#.. NOTE: the "athenak" executable will be in the ${build_dir}/src directory
+#..       cmake --install just installs the kokkos include/, lib64/, and bin/
+#.. ===
+cmake --install . --prefix `pwd`
+
+cd ../
